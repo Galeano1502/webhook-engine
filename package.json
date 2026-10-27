@@ -1,0 +1,24 @@
+{
+  "name": "webhook-engine",
+  "version": "1.0.0",
+  "description": "Motor de mensageria e despacho de webhooks resiliente com filas, exponential backoff e DLQ",
+  "main": "src/http/server.js",
+  "type": "module",
+  "scripts": {
+    "start:api": "node src/http/server.js",
+    "start:worker": "node src/workers/dispatcherWorker.js",
+    "start:dlq": "node src/workers/dlqWorker.js",
+    "start:mock": "node src/mock/targetServer.js",
+    "dev:api": "node --watch src/http/server.js",
+    "dev:worker": "node --watch src/workers/dispatcherWorker.js",
+    "dev:dlq": "node --watch src/workers/dlqWorker.js",
+    "dev:mock": "node --watch src/mock/targetServer.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "bullmq": "^5.7.8",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "ioredis": "^5.4.1"
+  }
+}
