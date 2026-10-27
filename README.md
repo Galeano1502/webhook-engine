@@ -26,24 +26,16 @@ Este projeto resolve esse problema separando a recepção do evento da sua entre
 
 ## 📐 Arquitetura do Sistema
 
-[Cliente / API Produtora] ──(POST /events)──> [Express API]
-│
-(Enfileira Job)
-▼
-[Redis / BullMQ Queue]
-│
-(Worker consome)
-▼
-[Webhook Dispatcher]
-│       │
-(HTTP 2xx)   │       │ (HTTP 5xx / Timeout)
-┌────────────────────┘       └────────────────────┐
-▼                                                 ▼
-[Entrega Sucesso]                             [Retry: Backoff Exponencial]
-│
-(Esgotou N tentativas?)
-│
-Sim ─────┴─────> [Dead Letter Queue (DLQ)]
+```mermaid
+graph TD
+    A[Cliente / API Produtora] -->|POST /events| B[Express API]
+    B -->|Enfileira Job| C[(Redis / BullMQ Queue)]
+    C -->|Worker consome| D[Webhook Dispatcher]
+    
+    D -->|HTTP 2xx| E[Entrega Sucesso]
+    D -->|HTTP 5xx / Timeout| F[Retry: Backoff Exponencial]
+    
+    F -->|Esgotou N tentativas? Sim| G[Dead Letter Queue - DLQ]
 
 ---
 
